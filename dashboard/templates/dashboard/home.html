@@ -34,7 +34,7 @@
             min-height: 100%;
             font-family: Consolas, "Courier New", monospace;
             color: var(--text-main);
-            background: #000;
+            background: transparent;
             overflow-x: hidden;
         }
 
@@ -44,15 +44,17 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -3;
+            z-index: -10;
+        }
+        .panel {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
         }
 
-        .video-dim {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.28);
-            z-index: -2;
-        }
+        
 
         .container {
             max-width: 1180px;
@@ -74,14 +76,7 @@
             text-shadow: 0 0 8px rgba(143, 211, 255, 0.18);
         }
 
-        .panel {
-            background: transparent;
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 22px;
-            box-shadow: 0 0 0 1px rgba(255,255,255,0.03) inset;
-        }
+        
 
         .row {
             display: flex;
@@ -103,7 +98,7 @@
             padding: 11px 12px;
             border-radius: 8px;
             border: 1px solid var(--line);
-            background: var(--input-bg);
+            background: transparent);
             color: var(--text-main);
             outline: none;
             backdrop-filter: blur(1px);
@@ -128,7 +123,7 @@
             padding: 11px 16px;
             border: 1px solid rgba(143, 211, 255, 0.55);
             border-radius: 9px;
-            background: var(--button-bg);
+            background: transparent;
             color: #f4fbff;
             font-weight: 700;
             cursor: pointer;
@@ -137,7 +132,7 @@
         }
 
         button:hover {
-            background: var(--button-bg-hover);
+            background: transparent);
             box-shadow: 0 0 10px rgba(143, 211, 255, 0.18);
         }
 
@@ -243,7 +238,7 @@
     <video autoplay muted loop playsinline id="bg-video">
         <source src="{% static 'videos/v1.mp4' %}" type="video/mp4">
     </video>
-    <div class="video-dim"></div>
+    
 
     <div class="container">
         <h1>OSINT Dashboard</h1>
