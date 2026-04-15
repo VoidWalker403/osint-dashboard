@@ -3,17 +3,9 @@ import subprocess
 import os
 import re
 
-# ---------- TOOL PATHS ----------
-# If a tool works by name in your terminal, you can keep just the name:
-# MOSINT_PATH = "mosint"
-# HOLEHE_PATH = "holehe"
-# MAIGRET_PATH = "maigret"
-
-# If Django cannot find them, use full paths instead.
 MOSINT_PATH = r"C:\Users\91946\go\bin\mosint.exe"
-HOLEHE_PATH = r"C:\Users\91946\AppData\Local\Programs\Python\Python311\Scripts\holehe.exe"
-MAIGRET_PATH = r"c:\Users\91946\AppData\Local\Programs\Python\Python311\Scripts\maigret.exe"
-
+HOLEHE_PATH = "holehe"
+MAIGRET_PATH = "maigret"
 CONFIG_PATH = r"C:\Users\91946\.mosint.yaml"
 
 
@@ -65,7 +57,6 @@ def home(request):
                 no_recursion=no_recursion,
             )
 
-            # Optional file checks for mosint config/binary
             if selected_tool == "mosint":
                 if MOSINT_PATH != "mosint" and not os.path.exists(MOSINT_PATH):
                     context["parsed_lines"] = [
@@ -120,13 +111,10 @@ def build_command(selected_tool, target, top_sites, holehe_timeout, no_recursion
         return [MOSINT_PATH, target, "--config", CONFIG_PATH]
 
     if selected_tool == "holehe":
-        # Holehe is for email enumeration, not username search.
-        # It does not support --top-sites like Maigret.
         timeout_value = holehe_timeout if holehe_timeout.isdigit() else "8"
         return [HOLEHE_PATH, target, "--timeout", timeout_value]
 
     if selected_tool == "maigret":
-        # Maigret is for username search.
         cmd = [MAIGRET_PATH, target]
         if top_sites.isdigit():
             cmd.extend(["--top-sites", top_sites])
@@ -139,23 +127,21 @@ def build_command(selected_tool, target, top_sites, holehe_timeout, no_recursion
 
 def clean_output(selected_tool, raw_output):
     lines = raw_output.splitlines()
-
     cleaned = []
+
     for line in lines:
-        # Remove some messy broken characters from terminal output
         line = line.replace("âœ", "").replace("â", "").replace("\x00", "").strip()
 
         if not line:
             continue
 
-        # Remove Mosint banner/logo-ish lines
         if selected_tool == "mosint":
             lower = line.lower()
             if (
                 "github.com/alpkeskin" in lower
                 or lower.startswith("v3.")
-                or "mosint" == lower.strip()
-                or "now:" in lower and "target email" not in lower
+                or lower == "mosint"
+                or ("now:" in lower and "target email" not in lower)
             ):
                 continue
 
@@ -202,8 +188,6 @@ def classify_line(line):
 
 
 def extract_site_name(line, selected_tool):
-    # Holehe-style lines often start with service/site names
-    # Example: "[+] Spotify"
     match = re.match(r"^\[\+\]\s+([A-Za-z0-9_.\- ]+)", line)
     if match:
         return match.group(1).strip()
@@ -216,10 +200,9 @@ def extract_site_name(line, selected_tool):
     if match:
         return match.group(1).strip()
 
-    # Mosint examples
     site_keywords = [
-        "Spotify", "Instagram", "Twitter", "Google", "IPApi", "HaveIBeenPwned",
-        "Pastebin", "DNS", "Email", "Related Emails"
+        "Spotify", "Instagram", "Twitter", "Google", "IPApi",
+        "HaveIBeenPwned", "Pastebin", "DNS", "Email", "Related Emails"
     ]
     for keyword in site_keywords:
         if keyword.lower() in line.lower():

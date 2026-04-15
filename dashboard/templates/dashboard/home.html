@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OSINT Dashboard</title>
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            background: #0b1320;
-            color: #e6f1ff;
-            font-family: Consolas, monospace;
             margin: 0;
+            font-family: Consolas, monospace;
+            color: #e6f1ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background: #000;
+        }
+
+        #bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            object-fit: cover;
+            z-index: -2;
+        }
+
+        .video-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 10, 20, 0.62);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
             padding: 24px;
         }
 
@@ -17,17 +48,13 @@
             color: #7dd3fc;
         }
 
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
         .panel {
-            background: #111827;
-            border: 1px solid #334155;
-            border-radius: 10px;
+            background: rgba(17, 24, 39, 0.82);
+            border: 1px solid rgba(148, 163, 184, 0.25);
+            border-radius: 12px;
             padding: 18px;
             margin-bottom: 20px;
+            backdrop-filter: blur(4px);
         }
 
         .row {
@@ -47,7 +74,7 @@
             padding: 10px;
             border-radius: 6px;
             border: 1px solid #475569;
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.92);
             color: #e6f1ff;
             min-width: 250px;
         }
@@ -77,15 +104,15 @@
         }
 
         .legend-item {
-            background: #0f172a;
-            border: 1px solid #334155;
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(148, 163, 184, 0.18);
             border-radius: 8px;
             padding: 10px;
         }
 
         .results-box {
-            background: #07101d;
-            border: 1px solid #334155;
+            background: rgba(7, 16, 29, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.18);
             border-radius: 8px;
             padding: 15px;
             white-space: pre-wrap;
@@ -137,8 +164,8 @@
         }
 
         .tool-options {
-            background: #0f172a;
-            border: 1px dashed #334155;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px dashed rgba(148, 163, 184, 0.22);
             border-radius: 8px;
             padding: 12px;
             margin-top: 10px;
@@ -146,8 +173,8 @@
 
         .raw-box {
             margin-top: 15px;
-            background: #020617;
-            border: 1px solid #1e293b;
+            background: rgba(2, 6, 23, 0.92);
+            border: 1px solid rgba(30, 41, 59, 0.9);
             border-radius: 8px;
             padding: 12px;
             color: #cbd5e1;
@@ -176,6 +203,11 @@
     </script>
 </head>
 <body>
+    <video autoplay muted loop playsinline id="bg-video">
+        <source src="{% static 'videos/bg.mp4' %}" type="video/mp4">
+    </video>
+    <div class="video-overlay"></div>
+
     <div class="container">
         <h1>OSINT Dashboard</h1>
 
